@@ -1,4 +1,4 @@
-O **ProgressVertical** é uma biblioteca Python inovadora para exibição de barras de progresso verticais em aplicações de linha de comando (CLI).       
+O **ProgressVertical** é uma biblioteca  em __desenolvimento__ Python inovadora para exibição de barras de progresso verticais em aplicações de linha de comando (CLI).       
 Projetada com foco em usabilidade e personalização, permitindo a criação de animações de progresso multietapas em cores, estilos e durações configuráveis inspirada em outra
 biblioteca [_progressbar_](https://pypi.org/project/progressbar/)
 
