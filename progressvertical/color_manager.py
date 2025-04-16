@@ -24,3 +24,4 @@ class ColorManager:
         if not style_name:
             return ""
         return getattr(Style, style_name.upper(), "")
+

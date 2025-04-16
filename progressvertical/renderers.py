@@ -1,43 +1,48 @@
 import sys
-from .interfaces import ProgressRenderer
 from .color_manager import ColorManager
 
-class VerticalProgressRenderer(ProgressRenderer):
-
-    def __init__(self, height=10, spacing=6):
+class VerticalProgressRenderer:
+    def __init__(self, height=10, spacing=3):
         self.height = height
         self.spacing = spacing
         self.bar_width = 3
-        self._prepare_display_area()
+        self._first_render = True
 
-    def _prepare_display_area(self):
-        print("\n" * (self.height + 3), end='')
-        sys.stdout.write(f"\033[{self.height + 3}F")
-        sys.stdout.flush()
+    def _move_cursor_up(self, lines):
+        """Move o cursor para cima sem limpar o conteúdo"""
+        sys.stdout.write(f"\033[{lines}A")
 
-    def render(self, progress_data: list) -> None:
-        sys.stdout.write(f"\033[{self.height + 3}H\033[J")
-
+    def render(self, progress_data):
+        if self._first_render:
+            print("\n" * (self.height + 3))
+            self._move_cursor_up(self.height + 3)
+            self._first_render = False
+        else:
+            self._move_cursor_up(self.height + 3)
+        
+        sys.stdout.write("\033[J") 
+        
         for line in range(self.height, 0, -1):
-            for idx, data in enumerate(progress_data):
-                space = ' ' * (self.spacing if idx > 0 else 2)
-                filled = line <= data['progress']
-                color = data.get('fore_color', '') + data.get('back_color', '') + data.get('style', '')
-                block = color + '▓▓▓' + ColorManager.RESET if filled else '   '
-                sys.stdout.write(space + block)
-            sys.stdout.write('\n')
-
-        labels = []
-        for idx, data in enumerate(progress_data):
-            total_space = self.bar_width + (self.spacing if idx > 0 else 2)
-            labels.append(data['label'].center(total_space))
-        print(''.join(labels))
-
-        percentages = []
-        for idx, data in enumerate(progress_data):
-            total_space = self.bar_width + (self.spacing if idx > 0 else 2)
-            pct = min(100, (data['progress'] / self.height) * 100)
-            color = data.get('fore_color', '') + data.get('style', '')
-            percentages.append(color + f"{pct:>3.0f}%".center(total_space) + ColorManager.RESET)
-        print(''.join(percentages))
+            line_str = ""
+            for i, data in enumerate(progress_data):
+                prefix = " " * (self.spacing if i > 0 else 1)
+                block = '▓▓▓' if line <= data['progress'] else '   '
+                color = f"{data.get('fore_color','')}{data.get('back_color','')}{data.get('style','')}"
+                line_str += f"{prefix}{color}{block}{ColorManager.RESET}"
+            print(line_str)
+        
+        labels_line = ""
+        for i, data in enumerate(progress_data):
+            prefix = " " * (self.spacing if i > 0 else 1)
+            labels_line += f"{prefix}{data['label'].center(self.bar_width)}"
+        print(labels_line)
+        
+        percent_line = ""
+        for i, data in enumerate(progress_data):
+            prefix = " " * (self.spacing if i > 0 else 1)
+            pct = min(100, (data['progress']/self.height)*100)
+            color = f"{data.get('fore_color','')}{data.get('style','')}"
+            percent_line += f"{prefix}{color}{pct:3.0f}%{ColorManager.RESET}"
+        print(percent_line)
+        
         sys.stdout.flush()

@@ -1,26 +1,13 @@
-from progressvertical  import ProgressManager, VerticalProgressRenderer, ColorManager
+from progressvertical import ProgressManager, VerticalProgressRenderer, ColorManager
+import time
 
 ColorManager.init_colorama()
-
-renderer = VerticalProgressRenderer(height=10)
+renderer = VerticalProgressRenderer(height=5)
 manager = ProgressManager(renderer)
+print("progresso")
+lista = [1, 2, 3, 4, 5]
 
-manager.add_stage(
-    label="Download",
-    duration=2.0,
-    fore_color="LIGHTBLUE_EX",
-    style="BRIGHT",
-)
+for numero in manager.track(lista, label="Números", fore_color="green"):
+    print(f"Processando: {numero}")
 
-manager.add_stage(
-    label="Processamento",
-    duration=3.0,
-)
-
-manager.add_stage(
-    label="Finalizado",
-    duration=1.0,
-    fore_color="GREEN",
-    style="BRIGHT",
-)
-manager.start_animation()
+print("Processo concluído!")

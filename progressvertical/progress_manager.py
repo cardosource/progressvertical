@@ -1,45 +1,53 @@
 import time
-from math import ceil
 from .color_manager import ColorManager
-from .interfaces import ProgressRenderer
 
 class ProgressManager:
-
-    def __init__(self, renderer: ProgressRenderer):
+    def __init__(self, renderer):
         self.stages = []
         self.renderer = renderer
+        self._trackers = None
 
-    def add_stage(
-        self,
-        label: str,
-        duration: float = 1.0,
-        fore_color: str = None,
-        back_color: str = None,
-        style: str = None,
-    ):
+    def add_stage(self, label, duration=1.0, fore_color=None, back_color=None, style=None):
         self.stages.append({
             'label': label,
             'duration': duration,
             'progress': 0,
             'complete': False,
-            'fore_color': ColorManager.get_fore_color(fore_color),
+            'fore_color': ColorManager.get_fore_color(fore_color), 
             'back_color': ColorManager.get_back_color(back_color),
-            'style': ColorManager.get_style(style),
+            'style': ColorManager.get_style(style)
         })
 
-    def start_animation(self, update_interval=0.1):
-        try:
-            while not all(stage['complete'] for stage in self.stages):
-                self._update_progress()
-                self.renderer.render(self.stages)
-                time.sleep(update_interval)
-        except KeyboardInterrupt:
-            print("\nProgresso interrompido pelo usuário!")
+    def track(self, iterable, label="Progresso", fore_color=None, back_color=None, style=None):
+        stage_idx = None
+        for i, stage in enumerate(self.stages):
+            if stage['label'] == label:
+                stage_idx = i
+                break
+        
+        if stage_idx is None:
+            self.add_stage(label=label, fore_color=fore_color,
+                         back_color=back_color, style=style)
+            stage_idx = len(self.stages) - 1
 
-    def _update_progress(self):
-        for stage in self.stages:
-            if not stage['complete']:
-                stage['progress'] += 1
-                if stage['progress'] >= self.renderer.height:
-                    stage['complete'] = True
-                    stage['progress'] = self.renderer.height
+        total = len(iterable) if hasattr(iterable, '__len__') else None
+        render_height = self.renderer.height
+
+        for i, item in enumerate(iterable):
+            if total:
+                self.stages[stage_idx]['progress'] = min(
+                    (i + 1) / total * render_height,
+                    render_height
+                )
+            else:
+                self.stages[stage_idx]['progress'] = min(
+                    self.stages[stage_idx]['progress'] + (render_height / 10),
+                    render_height
+                )
+            
+            self.renderer.render(self.stages)
+            yield item
+
+        self.stages[stage_idx]['progress'] = render_height
+        self.stages[stage_idx]['complete'] = True
+        self.renderer.render(self.stages)
