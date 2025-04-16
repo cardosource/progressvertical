@@ -8,17 +8,29 @@ class ProgressManager:
         self._trackers = None
 
     def add_stage(self, label, duration=1.0, fore_color=None, back_color=None, style=None):
+        """Adiciona um novo estágio de progresso"""
         self.stages.append({
             'label': label,
             'duration': duration,
             'progress': 0,
             'complete': False,
-            'fore_color': ColorManager.get_fore_color(fore_color), 
+            'fore_color': ColorManager.get_fore_color(fore_color),
             'back_color': ColorManager.get_back_color(back_color),
             'style': ColorManager.get_style(style)
         })
 
     def track(self, iterable, label="Progresso", fore_color=None, back_color=None, style=None):
+        """
+        Rastreia um iterável com uma barra de progresso
+        
+        Args:
+            iterable: Lista/iterável a ser processada
+            label: Nome da barra de progresso
+            fore_color: Cor da barra (opcional)
+        
+        Yields:
+            Itens do iterável um por um
+        """
         stage_idx = None
         for i, stage in enumerate(self.stages):
             if stage['label'] == label:
