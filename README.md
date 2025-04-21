@@ -14,6 +14,12 @@ Projetada com foco em **usabilidade** e **personalização**, permite criar anim
 ㅤ <img src="https://cdn.pixabay.com/photo/2025/04/14/20/46/20-46-21-815_960_720.png" alt="Fluxograma" width="500" height="250" />
 
 ---
+ ProgressVertical requer Python 3.10 ou superior para funcionar corretamente.
+
+A biblioteca foi desenvolvida e testada em versões recentes do Python, aproveitando recursos que não estão disponíveis em versões mais antigas, como melhorias de performance, novas funcionalidades da linguagem e melhor compatibilidade com dependências modernas.
+
+> ⚠️ Importante: versões do Python anteriores à 3.10 podem causar erros inesperados ou impedir o funcionamento da biblioteca.
+
 
 ### 📦 Instalação
 
