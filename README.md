@@ -26,7 +26,7 @@ A biblioteca foi desenvolvida e testada em versões recentes do Python, aproveit
 > pip install progressvertical
 
 
-## Exemplos de Uso
+## Exemplo de Uso
 Exemplo 1 – Múltiplas listas com rótulos e barras de colores diversificadas.
 
 ```python
