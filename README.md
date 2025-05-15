@@ -10,9 +10,53 @@ Projetada com foco em **usabilidade** e **personalização**, permite criar anim
 **Dinamismo e clareza visual**!
 
 ---
+fluxograma:
 
-ㅤ <img src="https://cdn.pixabay.com/photo/2025/04/14/20/46/20-46-21-815_960_720.png" alt="Fluxograma" width="500" height="250" />
+```mermaid
 
+graph TD
+    %% Main Classes
+    A[ColorManager] -->|uses| B[colorama.Fore]
+    A -->|uses| C[colorama.Back]
+    A -->|uses| D[colorama.Style]
+    
+    E[ProgressManager] -->|uses| F[ProgressRenderer]
+    E -->|uses| A
+    
+    G[VerticalProgressRenderer] -->|implements| F
+    G -->|uses| A
+    G -->|uses| H[sys]
+    
+    %% Trackers
+    I[ProgressTracker] -->|abstract| J[ABC]
+    
+    K[ForLoopTracker] -->|implements| I
+    K -->|uses| E
+    
+    L[CountingTracker] -->|implements| I
+    L -->|uses| E
+    
+    M[UrlRequestTracker] -->|implements| I
+    M -->|uses| E
+    
+    %% Module Relationships
+    N[progress_manager] -->|imports| O[renderers]
+    N -->|imports| P[color_manager]
+    N -->|imports| Q[trackers]
+    
+    R[__init__.py] -->|exports| N
+    R -->|exports| O
+    R -->|exports| P
+    R -->|exports| Q
+    
+    %% Dependencies
+    G -->|depends on| S[ProgressRenderer interface]
+    K -->|depends on| T[ProgressManager]
+    L -->|depends on| T
+    M -->|depends on| T
+```
+
+ㅤ
 ---
  ProgressVertical requer Python 3.10 ou superior para funcionar corretamente.
 
@@ -52,6 +96,7 @@ print("finished")
 
 ```
 
+ <img src="https://cdn.pixabay.com/photo/2025/04/14/20/46/python-9534179_1280.png" alt="Fluxograma" width="400" height="250" />
 
 
 
